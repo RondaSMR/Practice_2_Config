@@ -1,0 +1,16 @@
+digraph DependencyGraph {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightblue];
+    edge [color=darkgreen];
+
+    "Newtonsoft.Json@13.0.1" [fillcolor=orange];
+    "Microsoft.NETFramework.ReferenceAssemblies@4.6.2";
+    "System.Runtime.CompilerServices.Unsafe@5.0.0";
+    "System.Threading.Tasks.Extensions@4.5.4";
+
+    "Newtonsoft.Json@13.0.1" -> "Microsoft.NETFramework.ReferenceAssemblies@4.6.2";
+    "Newtonsoft.Json@13.0.1" -> "System.Runtime.CompilerServices.Unsafe@5.0.0";
+    "Newtonsoft.Json@13.0.1" -> "System.Threading.Tasks.Extensions@4.5.4";
+    "System.Runtime.CompilerServices.Unsafe@5.0.0" -> "Microsoft.NETFramework.ReferenceAssemblies@4.6.2";
+    "System.Threading.Tasks.Extensions@4.5.4" -> "Microsoft.NETFramework.ReferenceAssemblies@4.6.2";
+}
