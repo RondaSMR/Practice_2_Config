@@ -1,6 +1,7 @@
 from typing import Dict, List, Set, Any
 from stage3 import DependencyGraph
 
+
 class ReverseDependencyAnalyzer:
     def __init__(self, graph: Dict[str, List[str]]):
         self.graph = graph
@@ -34,8 +35,8 @@ class ReverseDependencyAnalyzer:
 
     def _dfs_reverse_deps(self, current_package: str, max_depth: int,
                           current_depth: int, visited: Set[str], result: Dict[str, Any]) -> None:
-
-        if current_depth > max_depth or current_package in visited: return
+        if current_depth > max_depth or current_package in visited:
+            return
 
         visited.add(current_package)
 
@@ -53,7 +54,7 @@ class ReverseDependencyAnalyzer:
     def display_reverse_dependencies(self, target_package: str, max_depth: int = 3) -> None:
         result = self.find_reverse_dependencies(target_package, max_depth)
 
-        print(f"Обратные зависимости для пакета {target_package}:")
+        print(f"\nОбратные зависимости для пакета {target_package}:")
         print("-" * 50)
 
         if not result['reverse_deps']:
@@ -66,6 +67,7 @@ class ReverseDependencyAnalyzer:
             indent = "  " * dep['depth']
             arrow = "↳ " if dep['depth'] > 0 else "• "
             print(f"{indent}{arrow}{dep['package']}")
+
 
 class Stage4CLI:
     def __init__(self, config: Dict[str, Any]):
@@ -83,39 +85,24 @@ class Stage4CLI:
 
         analyzer = ReverseDependencyAnalyzer(self.graph_builder.graph)
 
-        self._demonstrate_reverse_dependencies(analyzer)
-
-    def _demonstrate_reverse_dependencies(self, analyzer: ReverseDependencyAnalyzer) -> None:
-        if self.config['test_mode']:
-            test_packages = ['D@1.0.0', 'E@1.0.0', 'F@1.0.0']
-        else:
-            test_packages = [
-                'Microsoft.NETFramework.ReferenceAssemblies@4.6.2',
-                'System.Runtime.CompilerServices.Unsafe@5.0.0',
-                'D@1.0.0'
-            ]
-
-        print("\nДЕМОНСТРАЦИЯ ОБРАТНЫХ ЗАВИСИМОСТЕЙ")
+        test_packages = [
+            f"{package_name}@{version}",
+            'Microsoft.NETFramework.ReferenceAssemblies@4.6.2',
+            'System.Runtime@4.3.0'
+        ]
 
         for test_package in test_packages:
             print(f"\nАнализ пакета: {test_package}")
+            print("-" * 40)
+            analyzer.display_reverse_dependencies(test_package, max_depth=2)
 
-            analyzer.display_reverse_dependencies(test_package, max_depth=3)
-
-            if test_package in analyzer.reverse_graph:
-                deps = analyzer.reverse_graph[test_package]
-                if deps:
-                    print(f"Статистика: {len(deps)} пакетов зависят от {test_package}")
-                else:
-                    print(f"Статистика: никто не зависит от {test_package}")
 
 def main_stage4():
     from stage1 import main_stage1
-
     config = main_stage1()
-
     cli = Stage4CLI(config)
     cli.run_stage4()
+
 
 if __name__ == "__main__":
     main_stage4()

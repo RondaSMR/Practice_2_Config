@@ -2,6 +2,7 @@ import json
 from typing import Dict, List, Set, Any
 from stage2 import DependencyCollector
 
+
 class DependencyGraph:
     def __init__(self, config: Dict[str, Any]):
         self.config = config
@@ -43,7 +44,6 @@ class DependencyGraph:
             for dep_name, dep_version in dependencies:
                 dep_key = f"{dep_name}@{dep_version}"
                 self.graph[package_key].append(dep_key)
-
                 self.dfs_build_graph(dep_name, dep_version, depth + 1, current_path)
 
         except Exception as e:
@@ -73,7 +73,8 @@ class DependencyGraph:
         if self.cyclic_dependencies:
             print(f"\nОбнаружены циклические зависимости:")
             for cycle in self.cyclic_dependencies:
-                print(f"{cycle}")
+                print(f"  ⚠️  {cycle}")
+
 
 class Stage3CLI:
     def __init__(self, config: Dict[str, Any]):
@@ -88,51 +89,15 @@ class Stage3CLI:
 
         print(f"Анализ пакета {package_name} версии {version}")
         self.graph_builder.dfs_build_graph(package_name, version)
-
         self.graph_builder.display_graph()
 
-        self._demonstrate_different_cases()
-
-    def _demonstrate_different_cases(self) -> None:
-        print("\nДЕМОНСТРАЦИЯ РАЗЛИЧНЫХ СЛУЧАЕВ")
-
-        test_cases = [
-            {"package": "Newtonsoft.Json", "version": "13.0.1", "max_depth": 2, "filter": ""},
-            {"package": "NLog", "version": "5.0.0", "max_depth": 3, "filter": "System"},
-            {"package": "AutoMapper", "version": "12.0.0", "max_depth": 1, "filter": ""},
-        ]
-
-        for i, test_case in enumerate(test_cases, 1):
-            print(f"\n--- Тестовый случай {i} ---")
-            print(f"Пакет: {test_case['package']}, Версия: {test_case['version']}")
-            print(f"Макс.глубина: {test_case['max_depth']}, Фильтр: '{test_case['filter']}'")
-
-            graph_builder = DependencyGraph({
-                **self.config,
-                'package_name': test_case['package'],
-                'package_version': test_case['version'],
-                'max_depth': test_case['max_depth'],
-                'filter_substring': test_case['filter']
-            })
-
-            graph_builder.dfs_build_graph(test_case['package'], test_case['version'])
-
-            root_key = f"{test_case['package']}@{test_case['version']}"
-            if root_key in graph_builder.graph:
-                deps = graph_builder.graph[root_key]
-                if deps:
-                    print(f"Зависимости: {', '.join(deps)}")
-                else:
-                    print("Зависимости не найдены")
-            print("-" * 30)
 
 def main_stage3():
     from stage1 import main_stage1
-
     config = main_stage1()
-
     cli = Stage3CLI(config)
     cli.run_stage3()
+
 
 if __name__ == "__main__":
     main_stage3()
