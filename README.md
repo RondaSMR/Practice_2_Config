@@ -133,3 +133,7 @@ python stage3.py --test-mode --package "A" --version "1.0.0" --max-depth 3
 python stage4.py --test-mode --package "D" --version "1.0.0"
 python stage5.py --test-mode --package "A" --version "1.0.0" --ascii-tree
 ```
+
+## Пример графа
+
+![dependency_graph.png](dependency_graph.png)

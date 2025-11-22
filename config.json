@@ -1,9 +1,9 @@
 {
-  "package_name": "Newtonsoft.Json",
+  "package_name": "Avalonia",
   "repository_url": "https://api.nuget.org/v3/index.json",
   "test_mode": false,
   "test_repository_path": "",
-  "package_version": "13.0.1",
+  "package_version": "11.3.7",
   "ascii_tree": false,
   "max_depth": 3,
   "filter_substring": ""
